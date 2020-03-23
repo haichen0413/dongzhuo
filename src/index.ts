@@ -5,23 +5,49 @@ import { Accounts } from "./entity/accounts";
 
 createConnection()
   .then(async connection => {
-    console.log({ connection });
     const user = new User();
     user.firstName = "hai";
     user.lastName = "chen";
     user.age = 25;
-    await connection.manager.save(user);
+    // await connection.manager.save(user);
 
     const accounts = new Accounts();
-    accounts.nickname = "nick";
+    accounts.nickname = "nick-0323-1234";
     accounts.status = 10;
-    await connection.manager.save(accounts);
+    accounts.description = "this is a text type of description";
+    accounts.isPub = true;
 
+    let accountsRepository = connection.getRepository(Accounts);
+    // console.log({ accountsRepository });
+    // const saveAcc = await accountsRepository.save(accounts);
+
+    // 查找全部
+    const allAcc = await accountsRepository.find();
+    // console.log("All photos from the db: ", allAcc);
+
+    // 查找某个id 返回是对象
+    const findId = await accountsRepository.findOne(2);
+    console.log({ findId });
+
+    // update
+    // findId.status = 20;
+    // await accountsRepository.save(findId);
+
+    // 查找某个列的值
+    const findNick = await accountsRepository.findOne({ nickname: "nick-0323-hai" });
+    const findNick1 = await accountsRepository.find({ nickname: "nick-0323-hai" });
+
+    findNick.isPub = false;
+    await accountsRepository.save(findNick);
+
+    const [allAcco, accountsCount] = await accountsRepository.findAndCount();
+    const allData = await accountsRepository.findAndCount();
     // const allUsers = await connection.manager.find();
 
-    // console.log(`${allUsers}`);
-
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
+    // delete
+    const findNickName = await accountsRepository.find({ nickname: "nick-0323" });
+    await accountsRepository.remove(findNickName);
+    // const users = await connection.manager.find(User);
+    // console.log("Loaded users: ", users);
   })
   .catch(error => console.log(error));

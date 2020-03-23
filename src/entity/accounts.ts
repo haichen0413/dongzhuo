@@ -5,9 +5,15 @@ export class Accounts {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 100 })
   nickname: string;
 
-  @Column()
+  @Column("text")
+  description: string;
+
+  @Column("double")
   status: number;
+
+  @Column()
+  isPub: boolean;
 }
